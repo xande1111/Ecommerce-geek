@@ -1,101 +1,92 @@
 const Categories = require("../models/categories");
 
-exports.create = (req, res) => {
-  // valddiar request
-  if (!req.body.cat_name) {
-    res.status(400).send({ message: "Campo deve ser preenchido!" });
-    return;
-  }
+const categoriesController = {
 
-  const category = {
-    cat_name: req.body.cat_name,
-    cat_description: req.body.cat_description,
-  };
+  async createCategories(req, res){
+      const { cat_name, cat_description} = req.body;
 
-
-  Categories.create(category)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Erro encontrado ao criar categoria.",
+      const newCategory = await Categories.create({
+        cat_name, 
+        cat_description,
       });
-    });
-};
 
-exports.findAll = (req, res) => {
-  Categories.findAll()
-    .then((categories) => {
-      res.send(categories);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Ocorreu algum erro ao recuperar categoria",
+      res.json(newCategory);
+  },
+
+  async getCategories(req, res){
+      const listCategories = await Categories.findAll();
+
+      res.json(listCategories);
+  },
+
+  async getCategoriesById(req, res){
+      const { id } = req.params;
+
+      const listCategoriesId = await Categories.findOne({
+          where: {
+              cat_id: id,
+          },
       });
-    });
-};
 
-exports.findOne = (req, res) => {
-  const id = req.params.id;
-
-  Categories.findByPk(id)
-    .then((category) => {
-      res.send(category);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Erro ao recuperar a categoria com id=" + id,
-      });
-    });
-};
-
-exports.update = (req, res) => {
-  const id = req.params.id;
-
-  Categories.update(req.body, {
-    where: { cat_id: id },
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "A categoria foi atualizada com êxito.",
-        });
+      if(listCategoriesId === null){
+          return res.status(404).json("Id não encontrado");
       } else {
-        res.send({
-          message: `Não é possível atualizar a categoria com id=${id}. Talvez a categoria não tenha sido encontrada ou campo esteja vazio!`,
-        });
+          res.json(listCategoriesId);
       }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error updating category with id=" + id,
-      });
-    });
-};
+      
 
-exports.delete = (req, res) => {
-  const id = req.params.id;
+  },
 
-  Categories.destroy({
-    where: { cat_id: id },
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "A categoria foi excluída com êxito!",
-        });
-      } else {
-        res.send({
-          message: `Não é possível excluir a categoria com id=${id}. Talvez a categoria não tenha sido encontrada!`,
-        });
+  async updateCategories(req, res){
+      const { id } = req.params;
+      const { cat_name, cat_description} = req.body;
+
+      await Categories.update({
+        cat_name, 
+        cat_description,
+      },
+      {
+          where: {
+              cat_id: id,
+          },
       }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Não foi possível excluir a categoria com id=" + id,
+      );
+
+      res.status(200).json(req.body);
+  },
+
+  async deleteCategories(req, res){
+      const { id } = req.params;
+      
+      const findCategory = await Catgories.findOne({
+          where: {
+              cat_id: id,
+          }
       });
-    });
-};
+
+      if(findCategory === null){                                             
+          res.status(404).json("Id não encontrado");
+      } else{ 
+
+          try {
+              await Categories.destroy({
+                  where: {
+                      cat_id: id,  
+                  } 
+              });
+
+              return res.status(204).json("Cadastro deletado!");
+
+          } catch (error){
+              if (error.name === 'SequelizeForeignKeyConstraintError') {
+                  return res.status(400).json('Não é possível deletar a categoria pois ela possui produtos ativos')
+              }
+          }     
+      }
+
+},
+
+
+}; 
+
+module.exports = categoriesController;
