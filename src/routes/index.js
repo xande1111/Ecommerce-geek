@@ -1,10 +1,17 @@
 const express = require("express");
 
+const requestLog = require("../middlewares/requestLog");
+
 const productsController = require("../controllers/productsController");
 const categoriesController = require("../controllers/categoriesController");
 const orderitemsController = require("../controllers/orderitemsController");
 const ordersController = require("../controllers/ordersController");
 const usersController = require('../controllers/usersController');
+
+const authController = require('../controller/authController');
+const usersCreateValidation = require('../validations/users/create');
+const authLoginValidation = require('../validations/auth/login');
+
 const routes = express.Router();
 
 routes.get("/", (req, res)=> {

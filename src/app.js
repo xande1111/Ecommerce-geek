@@ -5,4 +5,4 @@ const app = express();
 
 app.use(routes);
 
-app.listen(5000, ()=> console.log("Servidor rodando na porta 5000"))
+app.listen(3000, ()=> console.log("Servidor rodando na porta 3000"))

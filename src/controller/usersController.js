@@ -5,10 +5,11 @@ const usersController = {
 
     async createUser(req, res) {
     try {
+    const newSenha = bcrypt.hashSync(senha, 10);
     const newUser = await Users.create({
     user_name: req.body.user_name,
     user_email: req.body.user_email,
-    user_password: req.body.user_password,
+    user_password: newSenha,
     user_type: req.body.user_type,
     });
     res.status(201).json(newUser);
