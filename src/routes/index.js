@@ -8,9 +8,11 @@ const orderitemsController = require("../controllers/orderitemsController");
 const ordersController = require("../controllers/ordersController");
 const usersController = require('../controllers/usersController');
 
+const auth = require('../middlewares/auth');
 const authController = require('../controller/authController');
 const usersCreateValidation = require('../validations/users/create');
 const authLoginValidation = require('../validations/auth/login');
+
 
 const routes = express.Router();
 
@@ -26,6 +28,7 @@ routes.delete("order-items", orderitemsController.deleteOrderItem);
 routes.get("users", usersController.getUsers);
 routes.get("users/:id", usersController.getUserById);
 routes.post("users", usersController.createUser);
+routes.post("users/admin", usersController.createUserAdmin);
 routes.put("users", usersController.updateUser);
 routes.delete("users", usersController.deleteUser);
 

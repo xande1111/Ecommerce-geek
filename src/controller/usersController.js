@@ -18,6 +18,21 @@ const usersController = {
     }
     },
 
+    async createUserAdmin(req, res) {
+        try {
+        const newSenha = bcrypt.hashSync(senha, 10);
+        const newUser = await Users.create({
+        user_name: req.body.user_name,
+        user_email: req.body.user_email,
+        user_password: newSenha,
+        user_type: req.body.user_type,
+        });
+        res.status(201).json(newUser);
+        } catch (err) {
+        res.status(500).json({ message: err.message });
+        }
+        },
+
 
     async getUsers(req, res) {
     try {
