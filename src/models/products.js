@@ -10,6 +10,9 @@ const Products = db.define("Products", {
     product_name: {
         type: DataTypes.STRING,
     },
+    item_price: {
+        type: DataTypes.INTEGER
+    },
     product_photo: {
         type: DataTypes.BLOB,
     }, 
