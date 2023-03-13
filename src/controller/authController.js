@@ -27,7 +27,8 @@ const AuthController = {
             {
             id: user.id, 
             email: user.email, 
-            nome: user.nome
+            nome: user.nome,
+            user_type: 'admin'
             },
             secret.key
         );
