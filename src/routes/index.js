@@ -12,6 +12,8 @@ const auth = require('../middlewares/auth');
 const authController = require('../controller/authController');
 const usersCreateValidation = require('../validations/users/create');
 const authLoginValidation = require('../validations/auth/login');
+const adminMiddleware = require('../middlewares/adminMiddleware');
+const authAdmin = require('../middlewares/authMiddleware');
 
 
 const routes = express.Router();
