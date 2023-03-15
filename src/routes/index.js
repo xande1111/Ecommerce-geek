@@ -22,6 +22,8 @@ routes.get("/", (req, res)=> {
     res.send("Bem vindo à nossa loja");
 });
 
+routes.post("/login", authLoginValidation, authController.login);
+
 routes.get("/order-items/:id", orderitemsController.getOrderItemById);
 routes.post("/order-items", orderitemsController.createOrderItem);
 routes.put("/order-items", orderitemsController.updateOrderItem);
@@ -30,7 +32,7 @@ routes.delete("order-items", orderitemsController.deleteOrderItem);
 routes.get("users", usersController.getUsers);
 routes.get("users/:id", usersController.getUserById);
 routes.post("users", usersController.createUser);
-routes.post("users/admin", usersController.createUserAdmin);
+routes.post("users/admin", adminMiddleware, usersCreateValidation, usersController.createUserAdmin);
 routes.put("users", usersController.updateUser);
 routes.delete("users", usersController.deleteUser);
 
@@ -39,14 +41,14 @@ routes.post("orders", ordersController.createOrder);
 
 routes.get("categories", categoriesController.getCategories);
 routes.get("categories/:id", categoriesController.getCategoriesById);
-routes.post("categories", categoriesController.createCategories);
-routes.put("categories", categoriesController.updateCategories);
-routes.delete("categories", categoriesController.deleteCategories);
+routes.post("categories", adminMiddleware, categoriesController.createCategories);
+routes.put("categories", adminMiddleware, categoriesController.updateCategories);
+routes.delete("categories", adminMiddleware, categoriesController.deleteCategories);
 
 routes.get("products", productsController.getProducts);
 routes.get("products/:id", productsController.getProductById);
-routes.post("products", productsController.createProduct);
-routes.put("products", productsController.updateProduct);
-routes.delete("products", productsController.deleteProduct);
+routes.post("products", adminMiddleware, productsController.createProduct);
+routes.put("products", adminMiddleware, productsController.updateProduct);
+routes.delete("products", adminMiddleware, productsController.deleteProduct);
 
 module.exports = routes; 
